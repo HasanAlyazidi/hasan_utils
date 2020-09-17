@@ -94,7 +94,7 @@ class Api {
       }
     }).catchError((error) {
       if (kDebugMode) {
-        final String response = error is FormatException ? null : error.response;
+        final response = error is FormatException ? null : error.response;
         print('Api | error: $error | response: $response');
       }
 
