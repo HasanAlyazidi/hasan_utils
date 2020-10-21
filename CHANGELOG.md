@@ -1,3 +1,7 @@
+## [0.4.1] - 2020-10-21
+
+* Api: Ensure `onFinish()` is called after `onSuccess()`
+
 ## [0.4.0] - 2020-09-29
 
 * Api: Upload MultiPart files.

@@ -79,12 +79,12 @@ class Api {
       onStart();
     }
 
-    return _dio.request(url, data: formData, options: options).then((response) {
+    return _dio.request(url, data: formData, options: options).then((response) async {
       Map<String, dynamic> data = json.decode(response.toString());
 
       try {
         if (onSuccess != null) {
-          onSuccess(data);
+          await onSuccess(data);
         }
       } catch (e) {
         throw DioError(
