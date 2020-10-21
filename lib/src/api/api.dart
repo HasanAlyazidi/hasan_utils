@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fast_localization/fast_localization.dart';
 import 'package:dio/dio.dart';
+import 'package:fast_localization/fast_localization.dart';
 
 import 'package:hasan_utils/src/alert.dart';
 import 'package:hasan_utils/src/validate.dart';
 import 'package:hasan_utils/src/api/api_authorization.dart';
+import 'package:hasan_utils/src/api/api_multipart.dart';
 
 class Api {
   static String _baseUrl;
@@ -17,6 +18,7 @@ class Api {
   static Dio _dio = Dio(BaseOptions(
       baseUrl: baseUrl, connectTimeout: 15 * 1000, receiveTimeout: 15 * 1000));
 
+  static ApiMultipart multipart = ApiMultipart();
   static String get baseUrl => _baseUrl;
 
   static options(
@@ -66,12 +68,12 @@ class Api {
       apiHeaders.addAll(headers);
     }
 
-    Options options = Options(
+    final Options options = Options(
       method: method,
       headers: apiHeaders,
     );
 
-    FormData formData = FormData.fromMap(params);
+    final FormData formData = FormData.fromMap(params);
 
     if (onStart != null) {
       onStart();
@@ -131,7 +133,7 @@ class Api {
   }
 
   static get(String url, BuildContext context,
-      {Map<String, dynamic> params,
+      {Map<String, String> params,
       String alertTitle,
       bool auth = true,
       Map<String, String> headers,

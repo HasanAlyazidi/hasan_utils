@@ -1,3 +1,7 @@
+## [0.4.0] - 2020-09-29
+
+* Api: Upload MultiPart files.
+
 ## [0.3.0] - 2020-09-17
 
 * Updated dependencies.
