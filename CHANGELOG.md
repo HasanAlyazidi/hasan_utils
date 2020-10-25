@@ -1,3 +1,7 @@
+## [0.4.2] - 2020-10-25
+
+* Storage: added `setInt()`, `setDouble()`, `setBool()`
+
 ## [0.4.1] - 2020-10-21
 
 * Api: Ensure `onFinish()` is called after `onSuccess()`

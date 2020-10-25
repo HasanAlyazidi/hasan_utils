@@ -1,6 +1,6 @@
 name: hasan_utils
 description: A set of commonly used utilities for Flutter development.
-version: 0.4.1
+version: 0.4.2
 homepage: https://github.com/HasanAlyazidi/hasan_utils
 
 environment:
