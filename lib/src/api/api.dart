@@ -36,6 +36,10 @@ class Api {
 
   static String url(url) => '$baseUrl$url';
 
+  static Map<String, String> get authorizationHeader => {
+        'Authorization': _authorization?.header,
+      };
+
   static _requestCall(String method, String url, BuildContext context,
       {Map<String, dynamic> params,
       String alertTitle,

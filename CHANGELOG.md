@@ -1,3 +1,7 @@
+## [0.4.5] - 2020-11-30
+
+* Api: Add `authorizationHeader` to get authorization's header (`{'Authorization': '...'}`)
+
 ## [0.4.4] - 2020-11-18
 
 * FileDownloader: Fully asynchronize `start()`
