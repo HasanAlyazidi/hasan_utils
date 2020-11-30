@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 class FileDownloader {
   CancelToken _cancelToken;
 
-  void start({
+  Future<void> start({
     @required String url,
     @required String location,
     String filename,
@@ -29,7 +29,7 @@ class FileDownloader {
       final options = Options(method: method, headers: headers);
 
       if (onStart != null) {
-        onStart();
+        await onStart();
       }
 
       await dio.download(url, filePath,
@@ -43,16 +43,16 @@ class FileDownloader {
       }, cancelToken: _cancelToken);
 
       if (onDone != null) {
-        onDone(filePath);
+        await onDone(filePath);
       }
     } catch (e) {
       if (onError != null && !_cancelToken.isCancelled) {
-        onError(e);
+        await onError(e);
       }
     }
 
     if (onExit != null) {
-      onExit();
+      await onExit();
     }
   }
 

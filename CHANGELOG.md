@@ -1,6 +1,14 @@
+## [0.4.4] - 2020-11-18
+
+* FileDownloader: Fully asynchronize `start()`
+
+## [0.4.3] - 2020-11-18
+
+* FileDownloader: Make `start()` return `Future`
+
 ## [0.4.2] - 2020-10-25
 
-* Storage: added `setInt()`, `setDouble()`, `setBool()`
+* Storage: Added `setInt()`, `setDouble()`, `setBool()`
 
 ## [0.4.1] - 2020-10-21
 
