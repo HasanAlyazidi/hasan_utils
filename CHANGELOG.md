@@ -1,3 +1,11 @@
+## [1.0.1] - 2021-04-04
+
+* Navigation: Add `replace` ()
+
+## [1.0.0] - 2021-04-01
+
+* Null safety support
+
 ## [0.4.5] - 2020-11-30
 
 * Api: Add `authorizationHeader` to get authorization's header (`{'Authorization': '...'}`)

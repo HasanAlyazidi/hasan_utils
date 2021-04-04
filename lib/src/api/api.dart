@@ -11,20 +11,20 @@ import 'package:hasan_utils/src/api/api_authorization.dart';
 import 'package:hasan_utils/src/api/api_multipart.dart';
 
 class Api {
-  static String _baseUrl;
-  static ApiAuthorization _authorization;
+  static String? _baseUrl;
+  static ApiAuthorization? _authorization;
   static Map<String, String> _headers = {};
 
   static Dio _dio = Dio(BaseOptions(
       baseUrl: baseUrl, connectTimeout: 15 * 1000, receiveTimeout: 15 * 1000));
 
   static ApiMultipart multipart = ApiMultipart();
-  static String get baseUrl => _baseUrl;
+  static String get baseUrl => _baseUrl ?? '';
 
   static options(
-      {@required String baseUrl,
-      Map<String, String> headers,
-      ApiAuthorization authorization}) {
+      {required String baseUrl,
+      Map<String, String>? headers,
+      ApiAuthorization? authorization}) {
     _baseUrl = baseUrl;
 
     if (headers != null) {
@@ -40,16 +40,16 @@ class Api {
         'Authorization': _authorization?.header,
       };
 
-  static _requestCall(String method, String url, BuildContext context,
-      {Map<String, dynamic> params,
-      String alertTitle,
-      bool auth,
-      Map<String, String> headers,
-      Function onStart,
-      Function onSuccess,
-      Function onFinish,
-      Function onError,
-      bool silent}) {
+  static _requestCall(String method, String url, BuildContext? context,
+      {Map<String, dynamic>? params,
+      String? alertTitle,
+      bool auth = false,
+      Map<String, String>? headers,
+      Function? onStart,
+      Function? onSuccess,
+      Function? onFinish,
+      Function? onError,
+      bool silent = false}) {
     if (_baseUrl == null) {
       throw Exception(
           'Api error: No api base url specified, call Api.options(..) to set api base url.');
@@ -59,13 +59,13 @@ class Api {
       print('Api | method: $method | ${_dio.options.baseUrl}$url');
     }
 
-    var apiHeaders = {
+    Map<String, dynamic> apiHeaders = {
       'Content-Language': Localization.languageCountry.replaceFirst('_', '-'),
       'Accept': 'application/json',
     }..addAll(_headers);
 
     if (auth && _authorization != null) {
-      apiHeaders['Authorization'] = _authorization.header;
+      apiHeaders['Authorization'] = _authorization!.header;
     }
 
     if (headers != null) {
@@ -77,13 +77,15 @@ class Api {
       headers: apiHeaders,
     );
 
-    final FormData formData = FormData.fromMap(params);
+    final FormData formData = FormData.fromMap(params ?? {});
 
     if (onStart != null) {
       onStart();
     }
 
-    return _dio.request(url, data: formData, options: options).then((response) async {
+    return _dio
+        .request(url, data: formData, options: options)
+        .then((response) async {
       Map<String, dynamic> data = json.decode(response.toString());
 
       try {
@@ -91,8 +93,12 @@ class Api {
           await onSuccess(data);
         }
       } catch (e) {
+        final errorRequestOptions = RequestOptions(path: url);
+
         throw DioError(
+          requestOptions: errorRequestOptions,
           response: Response(
+            requestOptions: errorRequestOptions,
             data:
                 'Successful API call, but an error occurred inside `onSuccess` function. ($e)',
           ),
@@ -113,7 +119,7 @@ class Api {
         return;
       }
 
-      String errorMessage;
+      String? errorMessage;
 
       try {
         var errorResponse = json.decode(error.response.toString());
@@ -128,7 +134,9 @@ class Api {
 
       final errorTitle = alertTitle ?? t('error');
 
-      Alert.show(context, errorTitle, errorMessage);
+      if (context != null) {
+        Alert.show(context, errorTitle, errorMessage);
+      }
     }).whenComplete(() {
       if (onFinish != null) {
         onFinish();
@@ -136,15 +144,15 @@ class Api {
     });
   }
 
-  static get(String url, BuildContext context,
-      {Map<String, String> params,
-      String alertTitle,
+  static get(String url, BuildContext? context,
+      {Map<String, String>? params,
+      String? alertTitle,
       bool auth = true,
-      Map<String, String> headers,
-      Function onStart,
-      Function onSuccess,
-      Function onFinish,
-      Function onError,
+      Map<String, String>? headers,
+      Function? onStart,
+      Function? onSuccess,
+      Function? onFinish,
+      Function? onError,
       bool silent = false}) {
     String finalUrl = url;
 
@@ -166,15 +174,15 @@ class Api {
         silent: silent);
   }
 
-  static post(String url, BuildContext context,
-      {Map<String, dynamic> params,
-      String alertTitle,
+  static post(String url, BuildContext? context,
+      {Map<String, dynamic>? params,
+      String? alertTitle,
       bool auth = true,
-      Map<String, String> headers,
-      Function onStart,
-      Function onSuccess,
-      Function onFinish,
-      Function onError,
+      Map<String, String>? headers,
+      Function? onStart,
+      Function? onSuccess,
+      Function? onFinish,
+      Function? onError,
       bool silent = false}) {
     return _requestCall('POST', url, context,
         params: params,
@@ -188,15 +196,15 @@ class Api {
         silent: silent);
   }
 
-  static patch(String url, BuildContext context,
-      {Map<String, dynamic> params,
-      String alertTitle,
+  static patch(String url, BuildContext? context,
+      {Map<String, dynamic>? params,
+      String? alertTitle,
       bool auth = true,
-      Map<String, String> headers,
-      Function onStart,
-      Function onSuccess,
-      Function onFinish,
-      Function onError,
+      Map<String, String>? headers,
+      Function? onStart,
+      Function? onSuccess,
+      Function? onFinish,
+      Function? onError,
       bool silent = false,
       bool mock = false}) {
     if (params == null) {
@@ -222,15 +230,15 @@ class Api {
         silent: silent);
   }
 
-  static delete(String url, BuildContext context,
-      {Map<String, dynamic> params,
-      String alertTitle,
+  static delete(String url, BuildContext? context,
+      {Map<String, dynamic>? params,
+      String? alertTitle,
       bool auth = true,
-      Map<String, String> headers,
-      Function onStart,
-      Function onSuccess,
-      Function onFinish,
-      Function onError,
+      Map<String, String>? headers,
+      Function? onStart,
+      Function? onSuccess,
+      Function? onFinish,
+      Function? onError,
       bool silent = false,
       bool mock = false}) {
     if (params == null) {

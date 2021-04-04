@@ -1,21 +1,20 @@
-import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
 class FileDownloader {
-  CancelToken _cancelToken;
+  CancelToken? _cancelToken;
 
   Future<void> start({
-    @required String url,
-    @required String location,
-    String filename,
-    Function onStart,
-    Function(String) onProgress,
-    Function(String) onDone,
-    Function(Exception) onError,
-    Function onExit,
+    required String url,
+    required String location,
+    String? filename,
+    Function? onStart,
+    Function(String)? onProgress,
+    Function(String)? onDone,
+    Function(Exception)? onError,
+    Function? onExit,
     String method = 'GET',
-    Map<String, dynamic> params,
-    Map<String, dynamic> headers,
+    Map<String, dynamic> params = const {},
+    Map<String, dynamic>? headers,
   }) async {
     Dio dio = Dio();
 
@@ -46,8 +45,8 @@ class FileDownloader {
         await onDone(filePath);
       }
     } catch (e) {
-      if (onError != null && !_cancelToken.isCancelled) {
-        await onError(e);
+      if (onError != null && !_cancelToken!.isCancelled) {
+        await onError(Exception(e.toString()));
       }
     }
 
@@ -57,8 +56,8 @@ class FileDownloader {
   }
 
   void cancel() {
-    if (_cancelToken != null && !_cancelToken.isCancelled) {
-      _cancelToken.cancel();
+    if (_cancelToken != null && !_cancelToken!.isCancelled) {
+      _cancelToken!.cancel();
     }
   }
 }

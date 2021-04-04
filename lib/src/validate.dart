@@ -4,17 +4,17 @@ class Validate {
   static _ValidateLengths lengths = _ValidateLengths();
   static _ValidateMessages message = _ValidateMessages();
 
-  static bool email(String email) {
+  static bool email(String? email) {
     return email != null &&
         RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
             .hasMatch(email);
   }
 
-  static bool between(String string, int min, int max) {
+  static bool between(String? string, int min, int max) {
     return string != null && string.length >= min && string.length <= max;
   }
 
-  static bool empty(String value) {
+  static bool empty(String? value) {
     return value == null || value.isEmpty;
   }
 
@@ -28,7 +28,7 @@ class Validate {
     return parseString ? int.tryParse(value) != null : false;
   }
 
-  static bool range(num value, int min, int max) {
+  static bool range(num? value, int min, int max) {
     return value != null && value >= min && value <= max;
   }
 }

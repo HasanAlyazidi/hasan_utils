@@ -21,9 +21,9 @@ class Storage {
     return prefs.setBool(key, value);
   }
 
-  static Future<T> get<T>(String key) async {
+  static Future<T?> get<T>(String key) async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.get(key) as T;
+    return prefs.get(key) as T?;
   }
 
   static Future<void> remove(String key) async {

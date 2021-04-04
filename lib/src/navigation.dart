@@ -8,6 +8,13 @@ class Navigation {
     );
   }
 
+  static replace(BuildContext context, Widget screen) {
+    return Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => screen),
+    );
+  }
+
   static popAndPush(BuildContext context, Widget screen) {
     goBack(context);
     return navigate(context, screen);

@@ -1,14 +1,12 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 import 'package:hasan_utils/src/storage.dart';
 import 'package:hasan_utils/src/persistence/persistence_engine.dart';
 
 class JsonPersistence implements PersistenceEngine {
   JsonPersistence({
-    @required this.key,
-    @required this.data,
+    required this.key,
+    required this.data,
     this.version = 0,
   });
 
@@ -26,6 +24,6 @@ class JsonPersistence implements PersistenceEngine {
   }
 
   Future<void> reset() {
-    return null; // TODO: implement
+    throw Exception('implemented yet'); // TODO: implement
   }
 }

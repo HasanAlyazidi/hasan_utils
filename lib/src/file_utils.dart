@@ -1,7 +1,7 @@
 import 'dart:io';
 
 class FileUtils {
-  static Future delete({String path, Function onError}) async {
+  static Future delete({required String path, Function? onError}) async {
     try {
       final file = File(path);
 

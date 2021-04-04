@@ -4,11 +4,11 @@ import 'package:hasan_utils/hasan_utils.dart';
 void main() {
   // Api tests
   test('Api tests', () {
-    final baseUrl = 'https://example.com/api/v1/';
+    final baseUrl = 'https://jsonplaceholder.typicode.com/';
 
     Api.options(baseUrl: baseUrl);
 
-    Api.get('login', null);
+    Api.get('todos/1', null);
 
     expect(Api.baseUrl, baseUrl);
   });
@@ -47,5 +47,48 @@ void main() {
     expect(Validate.integer(''), false);
     expect(Validate.integer('', parseString: false), false);
     expect(Validate.integer(null), false);
+  });
+
+  // File Downloader tests
+  test('File Downloader tests', () async {
+    final downloader = FileDownloader();
+
+    bool isDownloaded = false;
+    bool isError = false;
+    List<String> callbacks = [];
+
+    await downloader.start(
+      url: 'http://www.africau.edu/images/default/sample.pdf',
+      location: '/tmp',
+      onDone: (_) => isDownloaded = true,
+    );
+
+    await downloader.start(
+      url: 'http://www.example.com/wrong-path/file.pdf',
+      location: '/tmp',
+      onError: (_) => isError = true,
+    );
+
+    await downloader.start(
+      url: 'http://www.africau.edu/images/default/sample.pdf',
+      location: '/tmp',
+      onStart: () => callbacks.add('onStart'),
+      onProgress: (_) {
+        if (callbacks.contains('onProgress')) {
+          return;
+        }
+
+        callbacks.add('onProgress');
+      },
+      onDone: (_) => callbacks.add('onDone'),
+      onExit: () => callbacks.add('onExit'),
+    );
+
+    expect(true, isDownloaded);
+    expect(true, isError);
+    expect('onStart', callbacks[0]);
+    expect('onProgress', callbacks[1]);
+    expect('onDone', callbacks[2]);
+    expect('onExit', callbacks[3]);
   });
 }

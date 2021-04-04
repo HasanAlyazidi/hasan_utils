@@ -3,7 +3,7 @@ import 'package:fast_localization/fast_localization.dart';
 
 class Alert {
   static void show(BuildContext context, String title, String text,
-      {String buttonTitle, Function onPressed}) {
+      {String? buttonTitle, Function? onPressed}) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -12,7 +12,7 @@ class Alert {
           title: Text(title),
           content: Text(text),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(buttonTitle ?? Localization.translate('ok')),
               onPressed: () async {
                 Navigator.of(context).pop();
@@ -28,16 +28,16 @@ class Alert {
     );
   }
 
-  static Future<bool> confirm(
+  static Future<bool?> confirm(
     BuildContext context,
     String title,
     String text,
     Function positiveButtonOnPressed, {
-    String positiveButtonTitle,
-    String negativeButtonTitle,
-    Function negativeButtonOnPressed,
+    String? positiveButtonTitle,
+    String? negativeButtonTitle,
+    Function? negativeButtonOnPressed,
   }) {
-    return showDialog(
+    return showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
@@ -45,14 +45,14 @@ class Alert {
           title: Text(title),
           content: Text(text),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(positiveButtonTitle ?? Localization.translate('ok')),
               onPressed: () async {
                 Navigator.of(context).pop(true);
                 await positiveButtonOnPressed();
               },
             ),
-            FlatButton(
+            TextButton(
               child:
                   Text(negativeButtonTitle ?? Localization.translate('cancel')),
               onPressed: () async {

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:hasan_utils/src/persistence/persistence_engine.dart';
 
 class Persistence {
-  final PersistenceEngine engine = null;
+  final PersistenceEngine? engine = null;
 
   Map<String, dynamic> _data = {};
 
@@ -25,17 +25,17 @@ class Persistence {
       throw Exception('No engine specified');
     }
 
-    final String json = await engine.load();
+    final String json = await engine!.load();
     _data = jsonDecode(json);
   }
 
   Future save() {
     final string = jsonEncode(_data);
-    return engine.save(string);
+    return engine!.save(string);
   }
 
   Future reset() async {
-    await engine.reset();
+    await engine!.reset();
     await load();
   }
 
