@@ -77,7 +77,8 @@ class Api {
       headers: apiHeaders,
     );
 
-    final FormData formData = FormData.fromMap(params ?? {});
+    final FormData formData =
+        FormData.fromMap(params ?? {}, ListFormat.multiCompatible);
 
     if (onStart != null) {
       onStart();

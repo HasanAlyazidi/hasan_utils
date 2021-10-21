@@ -1,6 +1,14 @@
+## [1.0.3] - 2021-10-21
+
+* Storage: Added `repload()`
+
+## [1.0.2] - 2021-10-17
+
+* Api: Fixed sending `List` in `params`
+
 ## [1.0.1] - 2021-04-04
 
-* Navigation: Add `replace` ()
+* Navigation: Add `replace()`
 
 ## [1.0.0] - 2021-04-01
 

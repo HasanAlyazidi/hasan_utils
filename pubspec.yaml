@@ -1,6 +1,6 @@
 name: hasan_utils
 description: A set of commonly used utilities for faster Flutter development.
-version: 1.0.1
+version: 1.0.3
 homepage: https://github.com/HasanAlyazidi/hasan_utils
 
 environment:
@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.0.5
+  shared_preferences: ^2.0.8
   dio: ^4.0.0
   fast_localization: ^1.0.0
 
