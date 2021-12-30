@@ -3,6 +3,8 @@ library hasan_utils;
 import 'dart:io' show Platform;
 
 export 'src/api/api_authorization.dart';
+export 'src/api/api_interceptor.dart';
+export 'src/api/api_request_options.dart';
 export 'src/api/api.dart';
 
 export 'src/alert.dart';

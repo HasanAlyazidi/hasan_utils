@@ -1,3 +1,8 @@
+## [1.1.0] - 2021-12-29
+
+* Api: Added interceptors to `Api.options()`
+* Upgraded dependencies
+
 ## [1.0.3] - 2021-10-21
 
 * Storage: Added `repload()`

@@ -4,19 +4,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:fast_localization/fast_localization.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 import 'package:hasan_utils/src/alert.dart';
 import 'package:hasan_utils/src/validate.dart';
 import 'package:hasan_utils/src/api/api_authorization.dart';
 import 'package:hasan_utils/src/api/api_multipart.dart';
+import 'package:hasan_utils/src/api/api_interceptor.dart';
+import 'package:hasan_utils/src/api/api_request_options.dart';
 
 class Api {
   static String? _baseUrl;
   static ApiAuthorization? _authorization;
+  static List<ApiInterceptor>? _interceptors;
   static Map<String, String> _headers = {};
 
-  static Dio _dio = Dio(BaseOptions(
-      baseUrl: baseUrl, connectTimeout: 15 * 1000, receiveTimeout: 15 * 1000));
+  static Dio? _dio;
 
   static ApiMultipart multipart = ApiMultipart();
   static String get baseUrl => _baseUrl ?? '';
@@ -24,7 +27,9 @@ class Api {
   static options(
       {required String baseUrl,
       Map<String, String>? headers,
-      ApiAuthorization? authorization}) {
+      ApiAuthorization? authorization,
+      List<ApiInterceptor>? interceptors}) {
+    _dio = null;
     _baseUrl = baseUrl;
 
     if (headers != null) {
@@ -32,6 +37,7 @@ class Api {
     }
 
     _authorization = authorization;
+    _interceptors = interceptors;
   }
 
   static String url(url) => '$baseUrl$url';
@@ -55,8 +61,12 @@ class Api {
           'Api error: No api base url specified, call Api.options(..) to set api base url.');
     }
 
+    if (_dio == null) {
+      _init();
+    }
+
     if (kDebugMode) {
-      print('Api | method: $method | ${_dio.options.baseUrl}$url');
+      print('Api | method: $method | ${_dio!.options.baseUrl}$url');
     }
 
     Map<String, dynamic> apiHeaders = {
@@ -84,7 +94,9 @@ class Api {
       onStart();
     }
 
-    return _dio
+    _addInterceptors();
+
+    return _dio!
         .request(url, data: formData, options: options)
         .then((response) async {
       Map<String, dynamic> data = json.decode(response.toString());
@@ -263,5 +275,57 @@ class Api {
         onFinish: onFinish,
         onError: onError,
         silent: silent);
+  }
+
+  static void _init() {
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: baseUrl,
+        connectTimeout: 15 * 1000,
+        receiveTimeout: 15 * 1000,
+      ),
+    );
+  }
+
+  static void _addInterceptors() {
+    _dio!.interceptors.clear();
+
+    if (_interceptors == null || _interceptors!.isEmpty) {
+      return;
+    }
+
+    final List<Frame> trace = Trace.current(3).frames;
+
+    for (final interceptor in _interceptors!) {
+      final item = InterceptorsWrapper(
+        onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
+          if (interceptor.onRequest == null) {
+            return;
+          }
+
+          final ApiRequestOptions apiOptions = ApiRequestOptions(
+            baseUrl: options.baseUrl,
+            path: options.path,
+            method: options.method,
+            headers: options.headers,
+          );
+
+          final bool handleNext = interceptor.onRequest!(apiOptions, trace);
+
+          if (!handleNext) {
+            return;
+          }
+
+          options.baseUrl = apiOptions.baseUrl;
+          options.path = apiOptions.path;
+          options.method = apiOptions.method;
+          options.headers = apiOptions.headers;
+
+          handler.next(options);
+        },
+      );
+
+      _dio!.interceptors.add(item);
+    }
   }
 }
