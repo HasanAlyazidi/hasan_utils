@@ -105,23 +105,25 @@ class Api {
     return _dio!
         .request(url, data: formData, options: options)
         .then((response) async {
-      Map<String, dynamic> data = json.decode(response.toString());
+      dynamic data;
+
+      try {
+        data = response.data;
+
+        if (data is! List && data is! Map) {
+          throw Exception('Response is not a JSON list or object.');
+        }
+      } catch (e) {
+        _throwDioError(url, 'Error occurred while parsing JSON. ($e)');
+      }
 
       try {
         if (onSuccess != null) {
           await onSuccess(data);
         }
       } catch (e) {
-        final errorRequestOptions = RequestOptions(path: url);
-
-        throw DioError(
-          requestOptions: errorRequestOptions,
-          response: Response(
-            requestOptions: errorRequestOptions,
-            data:
-                'Successful API call, but an error occurred inside `onSuccess` function. ($e)',
-          ),
-        );
+        _throwDioError(url,
+            'Successful API call, but an error occurred inside `onSuccess` function. ($e)');
       }
     }).catchError((error) {
       if (kDebugMode) {
@@ -333,5 +335,17 @@ class Api {
 
       _dio!.interceptors.add(item);
     }
+  }
+
+  static void _throwDioError(String url, String data) {
+    final errorRequestOptions = RequestOptions(path: url);
+
+    throw DioError(
+      requestOptions: errorRequestOptions,
+      response: Response(
+        requestOptions: errorRequestOptions,
+        data: data,
+      ),
+    );
   }
 }

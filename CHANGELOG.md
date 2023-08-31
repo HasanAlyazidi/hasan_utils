@@ -1,3 +1,8 @@
+## [1.1.2] - 2023-08-31
+
+* Api: Accept and force API response to be a JSON list or object.
+* Upgrade packages
+
 ## [1.1.1] - 2023-04-04
 
 * Api: Added `timeout` to `Api.options()`
