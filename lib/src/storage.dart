@@ -40,8 +40,4 @@ class Storage {
     final prefs = await SharedPreferences.getInstance();
     await prefs.reload();
   }
-
-  static void initTest() {
-    SharedPreferences.setMockInitialValues({});
-  }
 }

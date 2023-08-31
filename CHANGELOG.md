@@ -1,3 +1,7 @@
+## [1.1.1] - 2023-04-04
+
+* Api: Added `timeout` to `Api.options()`
+
 ## [1.1.0] - 2021-12-29
 
 * Api: Added interceptors to `Api.options()`

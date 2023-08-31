@@ -17,6 +17,7 @@ class Api {
   static String? _baseUrl;
   static ApiAuthorization? _authorization;
   static List<ApiInterceptor>? _interceptors;
+  static int _timeout = 60;
   static Map<String, String> _headers = {};
 
   static Dio? _dio;
@@ -28,7 +29,8 @@ class Api {
       {required String baseUrl,
       Map<String, String>? headers,
       ApiAuthorization? authorization,
-      List<ApiInterceptor>? interceptors}) {
+      List<ApiInterceptor>? interceptors,
+      int? timeout}) {
     _dio = null;
     _baseUrl = baseUrl;
 
@@ -38,6 +40,10 @@ class Api {
 
     _authorization = authorization;
     _interceptors = interceptors;
+
+    if (timeout != null) {
+      _timeout = timeout;
+    }
   }
 
   static String url(url) => '$baseUrl$url';
@@ -281,8 +287,8 @@ class Api {
     _dio = Dio(
       BaseOptions(
         baseUrl: baseUrl,
-        connectTimeout: 15 * 1000,
-        receiveTimeout: 15 * 1000,
+        connectTimeout: _timeout * 1000,
+        receiveTimeout: _timeout * 1000,
       ),
     );
   }
