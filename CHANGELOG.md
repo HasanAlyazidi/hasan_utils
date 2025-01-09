@@ -1,3 +1,7 @@
+## [1.2.0] - 2025-01-09
+
+* Upgrade Dio package from v4 to v5
+
 ## [1.1.2] - 2023-08-31
 
 * Api: Accept and force API response to be a JSON list or object.

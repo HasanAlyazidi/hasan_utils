@@ -289,8 +289,8 @@ class Api {
     _dio = Dio(
       BaseOptions(
         baseUrl: baseUrl,
-        connectTimeout: _timeout * 1000,
-        receiveTimeout: _timeout * 1000,
+        connectTimeout: Duration(seconds: _timeout),
+        receiveTimeout: Duration(seconds: _timeout),
       ),
     );
   }
@@ -340,7 +340,7 @@ class Api {
   static void _throwDioError(String url, String data) {
     final errorRequestOptions = RequestOptions(path: url);
 
-    throw DioError(
+    throw DioException(
       requestOptions: errorRequestOptions,
       response: Response(
         requestOptions: errorRequestOptions,
