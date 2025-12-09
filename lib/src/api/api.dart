@@ -12,6 +12,7 @@ import 'package:hasan_utils/src/api/api_authorization.dart';
 import 'package:hasan_utils/src/api/api_multipart.dart';
 import 'package:hasan_utils/src/api/api_interceptor.dart';
 import 'package:hasan_utils/src/api/api_request_options.dart';
+import 'package:hasan_utils/src/api/api_error_exception.dart';
 
 class Api {
   static String? _baseUrl;
@@ -96,6 +97,18 @@ class Api {
     final FormData formData =
         FormData.fromMap(params ?? {}, ListFormat.multiCompatible);
 
+    if (onError != null) {
+      final bool isValidType =
+          onError is Function(ApiErrorException) || onError is Function();
+
+      final bool isDynamicFunction = onError is Function(dynamic);
+
+      if (!isValidType || isDynamicFunction) {
+        throw Exception(
+            'Api error: onError must have explicit type: use () {} or (ApiErrorException) {}');
+      }
+    }
+
     if (onStart != null) {
       onStart();
     }
@@ -135,22 +148,48 @@ class Api {
         return;
       }
 
-      if (onError != null) {
-        onError();
-        return;
-      }
-
       String? errorMessage;
+      int? statusCode;
+      dynamic responseData;
+      bool isServerError = false;
+
+      final bool isDioError = error is DioException;
+
+      if (isDioError) {
+        statusCode = error.response?.statusCode;
+        responseData = error.response?.data;
+      }
 
       try {
         var errorResponse = json.decode(error.response.toString());
-        errorMessage = errorResponse['error'];
+        var errorField = errorResponse['error'];
 
-        if (errorMessage == null) {
+        if (errorField is String) {
+          errorMessage = errorField;
+          isServerError = true;
+        } else if (errorField == null) {
           throw Exception('No error message from API');
         }
-      } catch (e) {
-        errorMessage = Validate.message.unknownError;
+      } catch (e) {}
+
+      errorMessage = errorMessage ?? Validate.message.unknownError;
+
+      if (onError != null) {
+        if (onError is Function()) {
+          onError();
+        } else if (onError is Function(ApiErrorException)) {
+          final exception = ApiErrorException(
+            message: errorMessage,
+            isServerError: isServerError,
+            statusCode: statusCode,
+            responseData: responseData,
+            dioError: isDioError ? error : null,
+          );
+
+          onError(exception);
+        }
+
+        return;
       }
 
       final errorTitle = alertTitle ?? t('error');

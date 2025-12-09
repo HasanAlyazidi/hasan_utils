@@ -1,3 +1,7 @@
+## [1.2.1] - 2025-12-08
+
+* Api: Support onError: (ApiErrorException) {} in addition to the default() {}
+
 ## [1.2.0] - 2025-01-09
 
 * Upgrade Dio package from v4 to v5
