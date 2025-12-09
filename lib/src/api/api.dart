@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -161,8 +159,7 @@ class Api {
       }
 
       try {
-        var errorResponse = json.decode(error.response.toString());
-        var errorField = errorResponse['error'];
+        var errorField = responseData['error'];
 
         if (errorField is String) {
           errorMessage = errorField;

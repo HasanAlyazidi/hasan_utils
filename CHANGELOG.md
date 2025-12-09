@@ -1,6 +1,7 @@
 ## [1.2.1] - 2025-12-08
 
 * Api: Support onError: (ApiErrorException) {} in addition to the default() {}
+* Api: Enhance error JSON parsing in onError
 
 ## [1.2.0] - 2025-01-09
 
