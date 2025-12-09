@@ -150,6 +150,7 @@ class Api {
       int? statusCode;
       dynamic responseData;
       bool isServerError = false;
+      bool isSimpleError = true;
 
       final bool isDioError = error is DioException;
 
@@ -164,6 +165,11 @@ class Api {
         if (errorField is String) {
           errorMessage = errorField;
           isServerError = true;
+        } else if (errorField is Map<String, dynamic> &&
+            errorField.containsKey('message')) {
+          errorMessage = errorField['message'];
+          isServerError = true;
+          isSimpleError = false;
         } else if (errorField == null) {
           throw Exception('No error message from API');
         }
@@ -178,6 +184,7 @@ class Api {
           final exception = ApiErrorException(
             message: errorMessage,
             isServerError: isServerError,
+            isSimpleError: isSimpleError,
             statusCode: statusCode,
             responseData: responseData,
             dioError: isDioError ? error : null,
