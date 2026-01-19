@@ -16,7 +16,7 @@ class Persistence {
     return Future.wait(puts);
   }
 
-  dynamic get(String field) => _data[field];
+  dynamic get(String field) => _data[field] ?? engine?.data[field];
 
   void update(String field, dynamic value) => _data[field] = value;
 

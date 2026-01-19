@@ -1,3 +1,7 @@
+## [1.2.2] - 2025-01-18
+
+* Persistence: `get()` now falls back to `engine.data` defaults when a key doesn't exist in saved data
+
 ## [1.2.1] - 2025-12-08
 
 * Api: Support onError: (ApiErrorException) {} in addition to the default () {}
