@@ -18,6 +18,7 @@ class Api {
   static List<ApiInterceptor>? _interceptors;
   static int _timeout = 60;
   static Map<String, String> _headers = {};
+  static HttpClientAdapter? _httpClientAdapter;
 
   static Dio? _dio;
 
@@ -29,6 +30,7 @@ class Api {
       Map<String, String>? headers,
       ApiAuthorization? authorization,
       List<ApiInterceptor>? interceptors,
+      HttpClientAdapter? httpClientAdapter,
       int? timeout}) {
     _dio = null;
     _baseUrl = baseUrl;
@@ -39,6 +41,7 @@ class Api {
 
     _authorization = authorization;
     _interceptors = interceptors;
+    _httpClientAdapter = httpClientAdapter;
 
     if (timeout != null) {
       _timeout = timeout;
@@ -336,6 +339,10 @@ class Api {
         receiveTimeout: Duration(seconds: _timeout),
       ),
     );
+
+    if (_httpClientAdapter != null) {
+      _dio!.httpClientAdapter = _httpClientAdapter!;
+    }
   }
 
   static void _addInterceptors() {

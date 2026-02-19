@@ -1,3 +1,7 @@
+## [1.2.3] - 2026-02-19
+
+* Api: Added `httpClientAdapter` to `Api.options()`
+
 ## [1.2.2] - 2025-01-18
 
 * Persistence: `get()` now falls back to `engine.data` defaults when a key doesn't exist in saved data
