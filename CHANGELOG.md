@@ -1,3 +1,7 @@
+## [1.2.4] - 2026-02-27
+
+* Api: Only send `FormData` body when `params` is provided and non-empty
+
 ## [1.2.3] - 2026-02-19
 
 * Api: Added `httpClientAdapter` to `Api.options()`

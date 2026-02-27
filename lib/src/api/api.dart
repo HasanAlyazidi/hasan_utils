@@ -95,8 +95,9 @@ class Api {
       headers: apiHeaders,
     );
 
-    final FormData formData =
-        FormData.fromMap(params ?? {}, ListFormat.multiCompatible);
+    final FormData? formData = params != null && params.isNotEmpty
+        ? FormData.fromMap(params, ListFormat.multiCompatible)
+        : null;
 
     if (onError != null) {
       final bool isValidType =
